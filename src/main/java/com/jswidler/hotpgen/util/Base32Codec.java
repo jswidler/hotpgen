@@ -7,6 +7,7 @@ import com.google.common.io.BaseEncoding;
  * @author <a href="mailto:jswidler@gmail.com">Jesse Swidler</a>
  */
 public class Base32Codec {
+
     public static String encode(String str) {
         return BaseEncoding.base32().encode(str.getBytes(Charsets.UTF_8));
     }

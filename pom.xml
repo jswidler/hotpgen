@@ -63,6 +63,7 @@
                             <directory>${basedir}</directory>
                             <includes>
                                 <include>${jarName}.jar</include>
+                                <include>hotp.properties</include>
                             </includes>
                         </fileset>
                     </filesets>
@@ -76,11 +77,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>15.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
         </dependency>
     </dependencies>
 </project>

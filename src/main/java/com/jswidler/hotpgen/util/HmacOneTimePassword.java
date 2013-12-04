@@ -1,6 +1,7 @@
 package com.jswidler.hotpgen.util;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Strings;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
@@ -35,7 +36,7 @@ public class HmacOneTimePassword {
             int rawPasscode = truncatedHash % modulo;
 
             // Convert result to a string left padded with 0's
-            return StringUtils.leftPad(Integer.toString(rawPasscode), digits, '0');
+            return Strings.padStart(Integer.toString(rawPasscode), digits, '0');
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Couldn't find the " + algorithm + " algorithm", e);
         } catch (InvalidKeyException e) {

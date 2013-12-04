@@ -1,7 +1,6 @@
 package com.jswidler.hotpgen.app;
 
 import com.jswidler.hotpgen.util.SimpleCrypt;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +19,6 @@ public class AppProperties extends Properties {
 
     private static final String FILE_NAME = "hotp.properties";
     private static final String KEY = "key";
-
     private static final String ALGORITHM = "algorithm";
     private static final String PERIOD = "period";
     private static final String DIGITS = "digits";
@@ -64,7 +62,8 @@ public class AppProperties extends Properties {
     }
 
     public boolean hasKey() {
-        return !StringUtils.isEmpty(getProperty(KEY));
+        String key = getProperty(KEY);
+        return key != null && !key.isEmpty();
     }
 
     public String getKey() throws GeneralSecurityException {
