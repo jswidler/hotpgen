@@ -1,5 +1,6 @@
 package com.jswidler.hotpgen.app;
 
+import com.jswidler.hotpgen.util.HmacOneTimePassword;
 import com.jswidler.hotpgen.util.SimpleCrypt;
 
 import java.io.File;
@@ -28,16 +29,18 @@ public class AppProperties extends Properties {
      */
     private static final String SECRET = "3pkZ1TS6AIRqO7jN";
 
-    private boolean updated = false;
-
     public AppProperties() {
-        setProperty(ALGORITHM, "HMACSHA1");
-        setProperty(PERIOD, "30");
-        setProperty(DIGITS, "6");
-        load();
+        initializeDefaults();
+        loadPropertyFile();
     }
 
-    public void load() {
+    private void initializeDefaults() {
+        setProperty(ALGORITHM, HmacOneTimePassword.DEFAULT_ALGORITHM);
+        setProperty(PERIOD, Integer.toString(HmacOneTimePassword.DEFAULT_PERIOD));
+        setProperty(DIGITS, Integer.toString(HmacOneTimePassword.DEFAULT_DIGITS));
+    }
+
+    private void loadPropertyFile() {
         try {
             InputStream in = new FileInputStream(FILE_NAME);
             load(in);
@@ -49,30 +52,26 @@ public class AppProperties extends Properties {
         }
     }
 
-    public void save() {
-        if (updated) {
-            try {
-                File outputFile = new File(FILE_NAME);
-                OutputStream outputStream = new FileOutputStream(outputFile);
-                store(outputStream, "hotpgen settings");
-            } catch (IOException e) {
-                System.err.println("Error when trying to save properties: " + e);
-            }
+    public void savePropertyFile() {
+        try {
+            File outputFile = new File(FILE_NAME);
+            OutputStream outputStream = new FileOutputStream(outputFile);
+            store(outputStream, "hotpgen settings");
+        } catch (IOException e) {
+            System.err.println("Error when trying to save properties: " + e);
         }
     }
 
-    public boolean hasKey() {
-        String key = getProperty(KEY);
-        return key != null && !key.isEmpty();
-    }
-
     public String getKey() throws GeneralSecurityException {
+        String encryptedKey = getProperty(KEY);
+        if (encryptedKey == null || encryptedKey.isEmpty()) {
+            return "";
+        }
         return SimpleCrypt.decrypt(SECRET, getProperty(KEY));
     }
 
     public void setKey(String key) throws GeneralSecurityException {
         setProperty(KEY, SimpleCrypt.encrypt(SECRET, key));
-        updated = true;
     }
 
     public String getAlgorithm() {

@@ -17,21 +17,18 @@ public class HotpGenMain {
 
         if (args.length == 1) {
             properties.setKey(args[0]);
-            properties.save();
+            properties.savePropertyFile();
         }
     }
 
     public void run() throws GeneralSecurityException {
-        if (!properties.hasKey()) {
-            throw new IllegalStateException("A key must be provided");
-        }
-
         String token = HmacOneTimePassword.generateCode(
                 properties.getKey(),
                 properties.getAlgorithm(),
                 properties.getPeriod(),
                 properties.getDigits()
         );
+
         ClipboardTool.copyTo(token);
         System.out.println(token + " - (copied to clipboard)");
     }

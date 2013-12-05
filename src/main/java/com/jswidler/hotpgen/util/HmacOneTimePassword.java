@@ -11,6 +11,14 @@ import java.util.Date;
 
 public class HmacOneTimePassword {
 
+    public static final String DEFAULT_ALGORITHM = "HMACSHA1";
+    public static final int DEFAULT_PERIOD = 30;
+    public static final int DEFAULT_DIGITS = 6;
+
+    public static String generateCode(String secretKey) {
+        return generateCode(secretKey, DEFAULT_ALGORITHM, DEFAULT_PERIOD, DEFAULT_DIGITS);
+    }
+
     public static String generateCode(String secretKey, String algorithm, int period, int digits) {
         final byte[] keyBytes = Base32Codec.decode(secretKey);
         int modulo = (int) Math.pow(10, digits);
