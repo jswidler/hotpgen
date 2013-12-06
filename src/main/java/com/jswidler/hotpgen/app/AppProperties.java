@@ -25,11 +25,15 @@ public class AppProperties extends Properties {
     private static final String DIGITS = "digits";
 
     /**
-     * This secret is used so the key is not stored in plaintext in the property file.
+     * This secret is used so the key is not stored in plaintext in the property file; even when there is no password
+     * provided
      */
-    private static final String SECRET = "3pkZ1TS6AIRqO7jN";
+    private static final String SECRET = "vu0b4AGRs69VKqtJvrsk";
 
-    public AppProperties() {
+    private final byte[] encryptionKey;
+
+    public AppProperties(String password) {
+        encryptionKey = SimpleCrypt.makeKeyBytes(SECRET, password);
         initializeDefaults();
         loadPropertyFile();
     }
@@ -67,11 +71,20 @@ public class AppProperties extends Properties {
         if (encryptedKey == null || encryptedKey.isEmpty()) {
             return "";
         }
-        return SimpleCrypt.decrypt(SECRET, getProperty(KEY));
+
+        try {
+            return SimpleCrypt.decrypt(encryptionKey, getProperty(KEY));
+        } catch (GeneralSecurityException e) {
+            throw new GeneralSecurityException("failed to decrypt key - check the password", e);
+        }
     }
 
     public void setKey(String key) throws GeneralSecurityException {
-        setProperty(KEY, SimpleCrypt.encrypt(SECRET, key));
+        try {
+            setProperty(KEY, SimpleCrypt.encrypt(encryptionKey, key));
+        } catch (GeneralSecurityException e) {
+            throw new GeneralSecurityException("failed to encrypt key");
+        }
     }
 
     public String getAlgorithm() {

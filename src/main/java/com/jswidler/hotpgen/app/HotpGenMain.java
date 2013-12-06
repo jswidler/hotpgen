@@ -12,11 +12,11 @@ public class HotpGenMain {
 
     private final AppProperties properties;
 
-    public HotpGenMain(String[] args) throws GeneralSecurityException {
-        properties = new AppProperties();
+    public HotpGenMain(String key, String password) throws GeneralSecurityException {
+        properties = new AppProperties(password);
 
-        if (args.length == 1) {
-            properties.setKey(args[0]);
+        if (key != null) {
+            properties.setKey(key);
             properties.savePropertyFile();
         }
     }
